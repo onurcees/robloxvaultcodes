@@ -1,4 +1,4 @@
-﻿const SOCIAL_CODES_URLS = ["./social-codes-lite.json", "./social-codes.json", "social-codes.json"];
+﻿const SOCIAL_CODES_URLS = ["./social-codes.json", "./social-codes-lite.json", "social-codes.json"];
 const DATA_VERSION = "20260303-6";
 const PAGE_SIZE = 10;
 const CONSENT_STORAGE_KEY = "cv_ad_consent_v1";
@@ -98,6 +98,18 @@ const seedRows = [
   { code: "CLUTCHSPIN", reward: "3 Spin", status: "active", game: "Blade Ball", source: "" },
   { code: "SHADOWDROP", reward: "Sınırlı kozmetik ödülü", status: "expired", game: "Murder Mystery 2", source: "" }
 ];
+
+function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  return fetch(url, {
+    ...options,
+    signal: controller.signal
+  }).finally(() => {
+    clearTimeout(timer);
+  });
+}
 
 function titleCaseWords(input) {
   return input
@@ -483,7 +495,7 @@ async function loadRemoteCodes() {
 
   for (const sourceUrl of SOCIAL_CODES_URLS) {
     try {
-      const response = await fetch(`${sourceUrl}?v=${DATA_VERSION}`, { cache: "force-cache" });
+      const response = await fetchWithTimeout(`${sourceUrl}?v=${DATA_VERSION}`, { cache: "force-cache" });
       if (!response.ok) {
         continue;
       }
@@ -818,6 +830,9 @@ async function init() {
 }
 
 init();
+
+
+
 
 
 

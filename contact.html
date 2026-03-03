@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İletişim | Code Vault</title>
+  <meta name="description" content="Code Vault iletişim sayfası.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="./contact.html">
+  <style>
+    body{margin:0;background:#070b14;color:#edf4ff;font-family:Segoe UI,Tahoma,sans-serif}
+    .wrap{width:min(860px,calc(100% - 32px));margin:0 auto;padding:24px 0 40px}
+    .card{border:1px solid #294569;border-radius:14px;padding:18px;background:linear-gradient(170deg,rgba(21,35,58,.95),rgba(11,18,32,.95))}
+    h1{margin:0 0 12px;font-size:clamp(1.6rem,4vw,2.2rem)}
+    p{color:#c5d4eb;line-height:1.65}
+    a{color:#6ad9ff;text-decoration:none}
+    form{display:grid;gap:10px;margin-top:10px}
+    input,textarea{background:#0d1729;border:1px solid #294569;border-radius:10px;color:#edf4ff;padding:10px;font:inherit}
+    button{background:#0d1729;border:1px solid #294569;border-radius:10px;color:#edf4ff;padding:10px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <div class="card">
+      <h1>İletişim</h1>
+      <p>Öneri, düzeltme veya iş birliği için iletişime geçebilirsin.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="card">
+      <p>E-posta: <a href="mailto:admin@your-domain.com">admin@your-domain.com</a></p>
+      <form action="mailto:admin@your-domain.com" method="post" enctype="text/plain">
+        <input type="text" name="isim" placeholder="Ad Soyad" required>
+        <input type="email" name="email" placeholder="E-posta" required>
+        <textarea name="mesaj" placeholder="Mesajın" rows="6" required></textarea>
+        <button type="submit">Gönder</button>
+      </form>
+      <p><a href="./index.html">Ana sayfaya dön</a></p>
+    </article>
+  </main>
+</body>
+</html>
+
+

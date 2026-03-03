@@ -1,0 +1,120 @@
+/* Non-critical styles loaded after first paint */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-card,
+.table-card,
+.faq-card,
+.admin-card {
+  backdrop-filter: blur(8px);
+}
+
+.row-source {
+  margin-top: 6px;
+  font-size: 0.8rem;
+}
+
+.row-source a {
+  color: var(--accent);
+}
+
+.copy-btn,
+.ghost-btn,
+.mobile-menu-btn,
+.desktop-nav a,
+.mobile-nav a,
+details,
+.footer-links a {
+  transition: all 180ms ease;
+}
+
+.copy-btn:hover,
+.ghost-btn:hover {
+  border-color: rgba(106, 217, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.mobile-menu-btn:hover,
+.mobile-nav a:hover {
+  border-color: rgba(106, 217, 255, 0.6);
+}
+
+.footer-links a:hover {
+  color: #95f5a8;
+}
+
+.copy-btn:focus-visible,
+.ghost-btn:focus-visible,
+.mobile-menu-btn:focus-visible,
+.desktop-nav a:focus-visible,
+.mobile-nav a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+details[open] {
+  background: rgba(106, 217, 255, 0.06);
+}
+
+details p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ad-card {
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.ad-card:hover {
+  border-color: rgba(106, 217, 255, 0.5);
+}
+
+.consent-banner {
+  animation: consent-fade 220ms ease-out;
+}
+
+@keyframes consent-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-main {
+  animation: fade-up 260ms ease-out;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .copy-btn {
+    min-width: 70px;
+    padding: 7px 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,3 @@
+﻿# AdSense yayına almadan önce pub ID'yi güncelle.
+# Format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

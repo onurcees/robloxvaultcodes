@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# GitHub Pages sitemap
+Sitemap: https://onurcees.github.io/RobloxCodesHub/sitemap.xml

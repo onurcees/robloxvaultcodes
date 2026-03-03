@@ -1,4 +1,4 @@
-﻿const SOCIAL_CODES_URL = "./social-codes-lite.json";
+﻿const SOCIAL_CODES_URLS = ["./social-codes-lite.json", "./social-codes.json", "social-codes.json"];
 const DATA_VERSION = "20260303-6";
 const PAGE_SIZE = 10;
 const CONSENT_STORAGE_KEY = "cv_ad_consent_v1";
@@ -74,6 +74,7 @@ const hreflangLinks = [...document.querySelectorAll("link[rel='alternate'][hrefl
 const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
 const mobileNav = document.getElementById("mobile-nav");
 const mobileNavBackdrop = document.getElementById("mobile-nav-backdrop");
+const copyToast = document.getElementById("copy-toast");
 
 const consentBanner = document.getElementById("consent-banner");
 const consentMessage = document.getElementById("consent-message");
@@ -85,7 +86,7 @@ const adUnits = [...document.querySelectorAll(".ad-unit")];
 
 const state = {
   gameName: "Tüm Oyunlar",
-  monthYear: "Mart/2026",
+  monthYear: "March 2026",
   rows: [],
   visible: 0
 };
@@ -122,13 +123,8 @@ function isAllGames(value) {
   return normalized === "tüm oyunlar" || normalized === "tum oyunlar" || normalized === "all games" || normalized === "all";
 }
 
-function currentMonthYearTr() {
-  const raw = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric" }).format(new Date());
-  const parts = titleCaseWords(raw).split(" ");
-  if (parts.length >= 2) {
-    return `${parts[0]}/${parts[1]}`;
-  }
-  return titleCaseWords(raw);
+function currentMonthYearEn() {
+  return new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(new Date());
 }
 
 function normalizeStatus(statusValue) {
@@ -227,13 +223,20 @@ function setMetaContent(selector, content) {
   }
 }
 
+function buildHeadingText() {
+  if (isAllGames(state.gameName)) {
+    return `Roblox Vault Codes - Working Promo Codes ${state.monthYear}`;
+  }
+  return `Roblox ${state.gameName} Codes - Working Promo Codes ${state.monthYear}`;
+}
+
 // Başlık ve meta açıklamayı oyun adına göre dinamik günceller.
 function updateSeo() {
-  const headingText = `Roblox ${state.gameName} Kodları ${state.monthYear}`;
-  const description = `En güncel, çalışan ve bedava Roblox promo kodları burada. ${headingText} tablosu aktif ve geçersiz kod durumlarıyla listelenir.`;
+  const headingText = buildHeadingText();
+  const description = "Find the latest working and free Roblox promo codes in one place. Copy codes instantly and track active/expired status.";
 
   heading.textContent = headingText;
-  heroDescription.textContent = `${headingText} listesini tek tıkla kopyala. En güncel, çalışan ve bedava Roblox promo kodları burada.`;
+  heroDescription.textContent = "Latest working Roblox promo codes with one-click copy, clear status labels, and fast updates.";
   document.title = `${headingText} | ${SITE_CONFIG.siteName}`;
 
   setMetaContent('meta[name="description"]', description);
@@ -448,7 +451,13 @@ async function copyToClipboard(value, button) {
     document.body.removeChild(area);
   }
 
-  button.textContent = ok ? "Kopyalandı" : "Başarısız";
+  button.textContent = ok ? "Kopyalandı!" : "Başarısız";
+  if (ok && copyToast) {
+    copyToast.classList.remove("hidden");
+    setTimeout(() => {
+      copyToast.classList.add("hidden");
+    }, 900);
+  }
   setTimeout(() => {
     button.textContent = "Kopyala";
   }, 1100);
@@ -472,30 +481,37 @@ async function loadRemoteCodes() {
     return cachedRows;
   }
 
-  try {
-    const response = await fetch(`${SOCIAL_CODES_URL}?v=${DATA_VERSION}`, { cache: "force-cache" });
-    if (!response.ok) {
-      return cachedRows;
-    }
-    const payload = await response.json();
-    const rows = normalizeExternalRows(payload);
-
+  for (const sourceUrl of SOCIAL_CODES_URLS) {
     try {
-      localStorage.setItem(
-        DATA_CACHE_KEY,
-        JSON.stringify({
-          version: DATA_VERSION,
-          rows
-        })
-      );
-    } catch (error) {
-      // no-op
-    }
+      const response = await fetch(`${sourceUrl}?v=${DATA_VERSION}`, { cache: "force-cache" });
+      if (!response.ok) {
+        continue;
+      }
+      const payload = await response.json();
+      const rows = normalizeExternalRows(payload);
+      if (rows.length === 0) {
+        continue;
+      }
 
-    return rows;
-  } catch (error) {
-    return cachedRows;
+      try {
+        localStorage.setItem(
+          DATA_CACHE_KEY,
+          JSON.stringify({
+            version: DATA_VERSION,
+            rows
+          })
+        );
+      } catch (error) {
+        // no-op
+      }
+
+      return rows;
+    } catch (error) {
+      // try next source
+    }
   }
+
+  return cachedRows;
 }
 
 function filterByGame(rows) {
@@ -773,12 +789,13 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const gameQuery = params.get("oyun") || params.get("game");
   state.gameName = sanitizeGameName(gameQuery || "Tüm Oyunlar");
-  state.monthYear = currentMonthYearTr();
+  state.monthYear = currentMonthYearEn();
 
   updateSeo();
   updateFaqSchema();
   updateSiteSchema();
   updateAdsenseMeta();
+  tableSummary.textContent = "Searching latest codes...";
 
   const isFileProtocol = window.location.protocol === "file:";
   const remoteRows = isFileProtocol ? [] : await loadRemoteCodes();
@@ -801,6 +818,7 @@ async function init() {
 }
 
 init();
+
 
 
 
